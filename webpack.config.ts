@@ -106,7 +106,7 @@ function compiler(): webpack.Configuration {
       ...htmls,
       ...plugins,
     ],
-    devServer: { hot: true },
+    devServer: { hot: true, port: 'auto' },
     resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
     mode,
     cache: { type: 'filesystem' },
