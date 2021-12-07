@@ -20,6 +20,7 @@ specifiers:
   i18next-browser-languagedetector: ^6.1.2
   image-webpack-loader: ^8.0.1
   mini-css-extract-plugin: ^2.4.5
+  monaco-editor: ^0.30.1
   react: ^17.0.2
   react-dom: ^17.0.2
   react-i18next: ^11.14.3
@@ -46,6 +47,7 @@ dependencies:
   clsx: 1.1.1
   i18next: 21.5.4
   i18next-browser-languagedetector: 6.1.2
+  monaco-editor: 0.30.1
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-i18next: 11.14.3_i18next@21.5.4+react@17.0.2
@@ -5966,6 +5968,10 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dev: true
+
+  /monaco-editor/0.30.1:
+    resolution: {integrity: sha512-B/y4+b2O5G2gjuxIFtCE2EkM17R2NM7/3F8x0qcPsqy4V83bitJTIO4TIeZpYlzu/xy6INiY/+84BEm6+7Cmzg==}
+    dev: false
 
   /mozjpeg/7.1.1:
     resolution: {integrity: sha512-iIDxWvzhWvLC9mcRJ1uSkiKaj4drF58oCqK2bITm5c2Jt6cJ8qQjSSru2PCaysG+hLIinryj8mgz5ZJzOYTv1A==}

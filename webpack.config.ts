@@ -23,7 +23,7 @@ function compiler(): webpack.Configuration {
   const filename =
     mode !== 'production' ? 'js/[name].js' : 'js/[name].[contenthash:7].js'
 
-  const splitChunks = { chunks: 'all' as 'all' }
+  const splitChunks = {}//{ chunks: 'all' as 'all' }
   const { optimization }: webpack.Configuration = {
     optimization:
       mode !== 'production'
@@ -68,6 +68,7 @@ function compiler(): webpack.Configuration {
         template: pathOrFile.html,
         title: page.title,
         chunks: [page.filename],
+        scriptLoading: 'module',
         filename:
           page.id === config.homePage
             ? 'index.html'
@@ -76,7 +77,14 @@ function compiler(): webpack.Configuration {
   )
 
   return {
-    entry,
+    entry: {
+      ...entry,
+      'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
+      'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
+      'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
+      'html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
+      'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker',
+    },
     output: {
       path: pathOrFile.dist,
       filename,
@@ -101,11 +109,7 @@ function compiler(): webpack.Configuration {
         },
       ],
     },
-    plugins: [
-      new ForkTsCheckerWebpackPlugin(),
-      ...htmls,
-      ...plugins,
-    ],
+    plugins: [new ForkTsCheckerWebpackPlugin(), ...htmls, ...plugins],
     devServer: { hot: true, port: 'auto' },
     resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
     mode,
