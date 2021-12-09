@@ -4,6 +4,7 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin'
 import WorkboxPlugin from 'workbox-webpack-plugin'
@@ -20,15 +21,23 @@ function compiler(): webpack.Configuration {
   const { ENV } = process.env
 
   const mode = ENV !== 'production' ? 'development' : 'production'
-  const filename =
-    mode !== 'production' ? 'js/[name].js' : 'js/[name].[contenthash:7].js'
+  const hash = mode !== 'production' ? '' : '.[contenthash:7]'
+  const pathinfo = mode !== 'production' ? false : undefined // dev 输出结果不携带路径信息
 
-  const splitChunks = {}//{ chunks: 'all' as 'all' }
   const { optimization }: webpack.Configuration = {
     optimization:
       mode !== 'production'
-        ? { splitChunks }
-        : { splitChunks, minimizer: ['...', new CssMinimizerPlugin()] },
+        ? {
+            runtimeChunk: true,
+            splitChunks: false, // 避免额外优化步骤
+            removeAvailableModules: false, // 避免额外优化步骤
+            removeEmptyChunks: false, // 避免额外优化步骤
+          }
+        : {
+            minimizer: ['...', new CssMinimizerPlugin()],
+            splitChunks: { chunks: 'all' },
+            moduleIds: 'deterministic',
+          },
   }
   const styleLoader =
     mode !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader
@@ -37,8 +46,8 @@ function compiler(): webpack.Configuration {
       ? []
       : [
           new MiniCssExtractPlugin({
-            filename: 'css/[name].[contenthash:7].css',
-            chunkFilename: 'css/[id].[contenthash:7].css',
+            filename: `css/[name]${hash}.css`,
+            chunkFilename: `css/[id]${hash}.css`,
           }),
           // new FaviconsWebpackPlugin({
           //   logo: pathOrFile.favicon,
@@ -77,19 +86,13 @@ function compiler(): webpack.Configuration {
   )
 
   return {
-    entry: {
-      ...entry,
-      'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
-      'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
-      'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
-      'html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
-      'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker',
-    },
+    entry,
     output: {
       path: pathOrFile.dist,
-      filename,
+      filename: `js/[name]${hash}.js`,
       clean: true,
       publicPath: config.publicPath,
+      pathinfo,
     },
     module: {
       rules: [
@@ -109,7 +112,15 @@ function compiler(): webpack.Configuration {
         },
       ],
     },
-    plugins: [new ForkTsCheckerWebpackPlugin(), ...htmls, ...plugins],
+    plugins: [
+      new ForkTsCheckerWebpackPlugin(),
+      new MonacoWebpackPlugin({
+        filename: `worker/[name]${hash}.worker.js`,
+        publicPath: config.publicPath,
+      }),
+      ...htmls,
+      ...plugins,
+    ],
     devServer: { hot: true, port: 'auto' },
     resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
     mode,
