@@ -82,6 +82,16 @@ function compiler(): webpack.Configuration {
           page.id === config.homePage
             ? 'index.html'
             : page.filename + '/index.html',
+        minify: {
+          collapseWhitespace: true,
+          keepClosingSlash: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true,
+          minifyCSS: true,
+        },
       })
   )
 
