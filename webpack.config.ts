@@ -7,7 +7,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin'
-import WorkboxPlugin from 'workbox-webpack-plugin'
+import * as WorkboxPlugin from 'workbox-webpack-plugin'
 
 import config from './config'
 
@@ -46,18 +46,18 @@ function compiler(): webpack.Configuration {
       ? []
       : [
           new MiniCssExtractPlugin({
-            filename: `css/[name]${hash}.css`,
-            chunkFilename: `css/[id]${hash}.css`,
+            filename: `assets/css/[name]${hash}.css`,
+            chunkFilename: `assets/css/[id]${hash}.css`,
           }),
           // new FaviconsWebpackPlugin({
           //   logo: pathOrFile.favicon,
           //   cache: true,
           //   favicons: config.favicons,
           // }),
-          // new WorkboxPlugin.GenerateSW({
-          //   clientsClaim: true,
-          //   skipWaiting: true,
-          // }),
+          new WorkboxPlugin.GenerateSW({
+            skipWaiting: true,
+            clientsClaim: true,
+          }),
           // new BundleAnalyzerPlugin({ analyzerMode: "static" })
         ]
   const devtool =
@@ -91,6 +91,7 @@ function compiler(): webpack.Configuration {
           removeStyleLinkTypeAttributes: true,
           useShortDoctype: true,
           minifyCSS: true,
+          minifyJS: true,
         },
       })
   )
@@ -99,7 +100,7 @@ function compiler(): webpack.Configuration {
     entry,
     output: {
       path: pathOrFile.dist,
-      filename: `js/[name]${hash}.js`,
+      filename: `assets/js/[name]${hash}.js`,
       clean: true,
       publicPath: config.publicPath,
       pathinfo,
@@ -125,7 +126,7 @@ function compiler(): webpack.Configuration {
     plugins: [
       new ForkTsCheckerWebpackPlugin(),
       new MonacoWebpackPlugin({
-        filename: `worker/[name]${hash}.worker.js`,
+        filename: `assets/worker/[name]${hash}.worker.js`,
         publicPath: config.publicPath,
       }),
       ...htmls,

@@ -10,21 +10,23 @@ export function Editor() {
       editor?.layout()
     })
     if (divEl.current) {
-      editor = monaco.editor.create(divEl.current, {
-        value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
-          '\n'
-        ),
-        language: 'typescript',
-        fontSize: 16,
-        tabSize: 2,
-        fontLigatures: true,
-        renderWhitespace: 'boundary',
-        wordWrap: 'on',
-        renderControlCharacters: true,
-        rulers: [80, 120],
-        theme: 'vs-light+'
+      import('monaco-editor').then(m => {
+        editor = m.editor.create(divEl.current, {
+          value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
+            '\n'
+          ),
+          language: 'typescript',
+          fontSize: 16,
+          tabSize: 2,
+          fontLigatures: true,
+          renderWhitespace: 'boundary',
+          wordWrap: 'on',
+          renderControlCharacters: true,
+          rulers: [80, 120],
+          theme: 'vs-light+'
+        })
+        resizeObserver.observe(divEl.current)
       })
-      resizeObserver.observe(divEl.current)
     }
     return () => {
       editor.dispose()
