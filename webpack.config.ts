@@ -57,6 +57,7 @@ function compiler(): webpack.Configuration {
           new WorkboxPlugin.GenerateSW({
             skipWaiting: true,
             clientsClaim: true,
+            exclude: [/\.(?:png|jpg|jpeg|svg|LICENSE\.txt|map)$/],
           }),
           // new BundleAnalyzerPlugin({ analyzerMode: "static" })
         ]
