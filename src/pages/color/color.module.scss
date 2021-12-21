@@ -1,0 +1,13 @@
+.ul {
+  :global(li) {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+}
+.span-divider {
+  margin-right: 0.5rem;
+  &::before{
+    content: ':';
+  }
+}

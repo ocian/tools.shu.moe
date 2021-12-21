@@ -68,7 +68,7 @@ function compiler(): webpack.Configuration {
     .map((page) => ({
       [page.filename]: path.resolve(
         __dirname,
-        `./src/pages/${page.filename}.tsx`
+        `./src/pages/${page.filename}`
       ),
     }))
     .reduce((l, r) => ({ ...l, ...r }), {})

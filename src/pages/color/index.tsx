@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { render } from '../components'
+import { render } from '../../components'
+import { ListTag } from './list_tag'
+import { SpanCode } from './span_code'
+import { ColorType, regexp } from './constant'
+import styles from './color.module.scss'
 import clsx from 'clsx'
-
-enum ColorType {
-  HEX3 = '十六进制(3)',
-  HEX6 = '十六进制(6)',
-  RGB = 'RGB',
-  // HSL = 'HSL',
-  // HSB = 'HSB/HSV',
-}
-
-const regexp = {
-  HEX: /^#?[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/,
-  HEX3: /^#?[0-9a-fA-F]{3}$/,
-  HEX6: /^#?[0-9a-fA-F]{6}$/,
-  number255: /^([0-9]{1,2}|[01][0-9]{2}|2[0-5]{2})$/,
-}
 
 const ColorPage = () => {
   const [input, setInput] = useState<string>('')
@@ -113,9 +102,10 @@ const ColorPage = () => {
         </div>
       </div>
 
-      <ul className="list-group mt-3">
+      <ul className={clsx('list-group mt-3', styles.ul)}>
         <li className="list-group-item">
-          颜色:{' '}
+          颜色
+          <span className={styles['span-divider']} />
           <span
             className="mx-3 d-inline-block align-middle"
             style={{
@@ -128,30 +118,31 @@ const ColorPage = () => {
           ></span>
         </li>
         <li className="list-group-item">
-          类型:{' '}
-          {Object.entries(ColorType).map(([key, value]) => (
-            <span
-              className={clsx(
-                'badge mx-1 d-inline-block',
-                type + '' === value ? 'bg-primary' : 'bg-secondary opacity-25'
-              )}
-              key={key}
-            >
-              {value}
-            </span>
-          ))}
+          类型
+          <span className={styles['span-divider']} />
+          <ListTag
+            list={Object.entries(ColorType).map(([_, value]) => value)}
+            selected={type + ''}
+          />
         </li>
         <li className="list-group-item">
-          {ColorType.RGB}:{' '}
-          {sourceRGB ? <code>{`rgb(${sourceRGB.join(', ')})`}</code> : '---'}
+          {ColorType.RGB}
+          <span className={styles['span-divider']} />
+          <SpanCode code={sourceRGB && `rgb(${sourceRGB.join(', ')})`} />
         </li>
         <li className="list-group-item">
-          {ColorType.HEX6}:{' '}
-          {target?.hex ? <code>{`#${target?.hex?.join('')}`}</code> : '---'}
+          {ColorType.HEX6}
+          <span className={styles['span-divider']} />
+          <SpanCode code={target?.hex && `#${target?.hex?.join('')}`} />
         </li>
       </ul>
 
-      <p className="mt-3">参考：<a href="https://www.zhangxinxu.com/wordpress/2010/03/javascript-hex-rgb-hsl-color-convert/">张鑫旭 - JS HEX十六进制与RGB, HSL颜色的相互转换</a></p>
+      <p className="mt-3">
+        参考：
+        <a href="https://www.zhangxinxu.com/wordpress/2010/03/javascript-hex-rgb-hsl-color-convert/">
+          张鑫旭 - JS HEX十六进制与RGB, HSL颜色的相互转换
+        </a>
+      </p>
     </div>
   )
 }
