@@ -150,6 +150,8 @@ const ColorPage = () => {
           {target?.hex ? <code>{`#${target?.hex?.join('')}`}</code> : '---'}
         </li>
       </ul>
+
+      <p className="mt-3">参考：<a href="https://www.zhangxinxu.com/wordpress/2010/03/javascript-hex-rgb-hsl-color-convert/">张鑫旭 - JS HEX十六进制与RGB, HSL颜色的相互转换</a></p>
     </div>
   )
 }
