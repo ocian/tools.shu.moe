@@ -14,7 +14,6 @@ const config = {
     },
   },
   pages,
-  homePage: 'home',
   publicPath: '/',
 }
 

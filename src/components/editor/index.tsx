@@ -1,8 +1,9 @@
 import * as monaco from 'monaco-editor'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
 
 export function Editor() {
+  const [loading, setLoading] = useState(false)
   const divEl = useRef<HTMLDivElement>(null)
   let editor: monaco.editor.IStandaloneCodeEditor
   useEffect(() => {
@@ -10,7 +11,8 @@ export function Editor() {
       editor?.layout()
     })
     if (divEl.current) {
-      import('monaco-editor').then(m => {
+      import('monaco-editor').then((m) => {
+        setLoading(false)
         editor = m.editor.create(divEl.current, {
           value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
             '\n'
@@ -23,7 +25,7 @@ export function Editor() {
           wordWrap: 'on',
           renderControlCharacters: true,
           rulers: [80, 120],
-          theme: 'vs-light+'
+          theme: 'vs-light+',
         })
         resizeObserver.observe(divEl.current)
       })
@@ -33,5 +35,9 @@ export function Editor() {
       resizeObserver.disconnect()
     }
   }, [])
-  return <div className={styles.editor} ref={divEl}></div>
+  return (
+    <div className={styles.editor} ref={divEl}>
+      {loading && 'loading...'}
+    </div>
+  )
 }

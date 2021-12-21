@@ -79,10 +79,7 @@ function compiler(): webpack.Configuration {
         title: page.title,
         chunks: [page.filename],
         scriptLoading: 'module',
-        filename:
-          page.id === config.homePage
-            ? 'index.html'
-            : page.filename + '/index.html',
+        filename: (page.link === '' ? '' : `${page.link}/`) + 'index.html',
         minify: {
           collapseWhitespace: true,
           keepClosingSlash: true,
