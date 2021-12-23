@@ -1,25 +1,24 @@
 type SourceType = string | HTMLElement
 type ActionType = 'copy' | 'cut'
 
-export const copy: (source: SourceType) => string = (source) =>
-  action(source, 'copy')
-export const cut: (source: SourceType) => string = (source) =>
-  action(source, 'cut')
+export const copy = (source: SourceType) => action(source, 'copy')
+export const cut = (source: SourceType) => action(source, 'cut')
 
-function action(source: SourceType, type: ActionType): string {
-  let selectedText = ''
+function action(source: SourceType, type: ActionType): Promise<string> {
+  let selectedText: string
+  let p: Promise<boolean>
   if (typeof source === 'string') {
     const fakeElement = createFakeElement(source)
     document.documentElement.appendChild(fakeElement)
     selectedText = selectText(fakeElement)
-    command(type)
+    p = commandWithClipboardAPI(type, selectedText)
     fakeElement.remove()
   } else {
     selectedText = selectText(source)
-    command(type)
+    p = commandWithClipboardAPI(type, selectedText)
   }
 
-  return selectedText
+  return p.then(() => selectedText)
 }
 
 // 出处：https://github.com/zenorocha/clipboard.js/blob/master/src/common/create-fake-element.js
@@ -84,5 +83,17 @@ function command(type: ActionType): boolean {
     return document.execCommand(type)
   } catch (err) {
     return false
+  }
+}
+
+function commandWithClipboardAPI(
+  type: ActionType,
+  source: string
+): Promise<boolean> {
+  if (type === 'copy' && navigator.clipboard) {
+    return navigator.clipboard.writeText(source).then(() => true)
+  } else {
+    const exec = command(type)
+    return Promise.resolve(exec)
   }
 }
