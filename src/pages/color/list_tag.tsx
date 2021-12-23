@@ -8,7 +8,7 @@ export const ListTag = (props: { list: string[]; selected?: string }) => (
           'badge mx-1 d-inline-block',
           item + '' === props.selected
             ? 'bg-primary'
-            : 'bg-secondary opacity-25'
+            : 'bg-secondary'
         )}
         key={item}
       >

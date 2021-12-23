@@ -1,24 +1,19 @@
+import { useRef, useState } from 'react'
+import * as utils from '../../utils'
+
 export const SpanCode = (props: { code?: string }) => {
+  const ref = useRef<HTMLElement>()
+  const [htmlId] = useState((Math.random() + '_' + Date.now()).replace('.', ''))
+
   function copy() {
-    window.navigator.permissions
-      .query({ name: 'clipboard-write' as any })
-      .then((res) => {
-        if (res.state === 'granted') {
-          window.navigator.clipboard.writeText(props.code).then(() => {
-            alert('success')
-          })
-        } else {
-          console.log(res)
-        }
-      })
-      .catch((res) => {
-        console.log(res)
-      })
+    utils.clipboard.copy(props.code)
   }
 
   return (
     <>
-      <code>{props.code || '---'}</code>
+      <code ref={ref} id={htmlId}>
+        {props.code || '---'}
+      </code>
       {props.code && (
         <button
           type="button"

@@ -49,11 +49,11 @@ function compiler(): webpack.Configuration {
             filename: `assets/css/[name]${hash}.css`,
             chunkFilename: `assets/css/[id]${hash}.css`,
           }),
-          // new FaviconsWebpackPlugin({
-          //   logo: pathOrFile.favicon,
-          //   cache: true,
-          //   favicons: config.favicons,
-          // }),
+          new FaviconsWebpackPlugin({
+            logo: pathOrFile.favicon,
+            cache: true,
+            favicons: config.favicons,
+          }),
           new WorkboxPlugin.GenerateSW({
             skipWaiting: true,
             clientsClaim: true,
