@@ -3,7 +3,6 @@ import * as utils from '../../utils'
 
 export const SpanCode = (props: { code?: string }) => {
   const ref = useRef<HTMLElement>()
-  const [htmlId] = useState((Math.random() + '_' + Date.now()).replace('.', ''))
 
   function copy() {
     utils.clipboard.copy(props.code)
@@ -11,9 +10,7 @@ export const SpanCode = (props: { code?: string }) => {
 
   return (
     <>
-      <code ref={ref} id={htmlId}>
-        {props.code || '---'}
-      </code>
+      <code ref={ref}>{props.code || '---'}</code>
       {props.code && (
         <button
           type="button"
